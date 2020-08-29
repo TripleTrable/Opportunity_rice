@@ -1,0 +1,11 @@
+.config/chromium
+.calcurse/todo
+.calcurse/apts
+.mpd/database
+.ncmpcpp/lyrics
+.ncmpcpp/ncmpcpp
+.config/msmtp
+.config/mutt
+.vim/stdtags
+scripts/getpass.sh
+

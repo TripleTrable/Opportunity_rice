@@ -1,0 +1,25 @@
+
+export PATH="${PATH}:/home/lars/scripts"
+export SUDO_ASKPASS="$HOME/scripts/askpass"
+export EDITOR="/usr/bin/nvim"
+export TLDR_CACHE_ENABLED=1
+export TLDR_CACHE_MAX_AGE=720
+export KEYTIMEOUT=1
+export TERMINAL="st"
+export BROWSER="firefox"
+export EDITOR="nvim"
+
+export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_DATA_HOME="$HOME/.local/share"
+export XDG_CACHE_HOME="$HOME/.cache"
+
+export XINITRC="$XDG_CONFIG_HOME/xinitrc"
+export LESSHISTFILE="-"
+export ZDOTDIR="$XDG_CONFIG_HOME/zsh"
+export NOTMUCH_CONFIG="$XDG_CONFIG_HOME/notmuch/notmuchrc"
+export NMBGIT="$XDG_DATA_HOME/notmuch/nmbug"
+export WGETRC="$XDG_CONFIG_HOME/wget/wgetrc"
+export DIRSTACKFILE="$ZDOTDIR/zdirs"
+
+export AndroidSdkDirectory="~/Android/Sdk"
+export _JAVA_AWT_WM_NONREPARENTING=1
