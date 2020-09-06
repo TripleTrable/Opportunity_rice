@@ -1,4 +1,4 @@
-# vi:syntax=zshrc
+#vi:syntax=zshrc
 
 alias sudo='sudo '
 alias t="telegram-cli -N"

@@ -15,7 +15,7 @@ syntax enable
 
 
 
-
+set modeline
 set nocompatible
 set <F11>=[23~
 let mapleader="\<F11>"
