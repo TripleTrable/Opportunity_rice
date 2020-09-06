@@ -1,4 +1,6 @@
 # vi:syntax=zshrc
+
+alias sudo='sudo '
 alias t="telegram-cli -N"
 alias dotfiles='git --git-dir=$HOME/.dotfiles --work-tree=$HOME'
 alias cf='cd ~/.config/'
