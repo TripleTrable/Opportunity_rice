@@ -1,5 +1,5 @@
 
-export PATH="${PATH}:/home/lars/scripts"
+export PATH="/usr/local/cross/bin:${PATH}:/home/lars/scripts"
 export SUDO_ASKPASS="$HOME/scripts/askpass"
 export EDITOR="/usr/bin/nvim"
 export TLDR_CACHE_ENABLED=1
