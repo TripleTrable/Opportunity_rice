@@ -1,5 +1,5 @@
 #!/bin/bash
-mode=$(echo -e "Bildschirme\nLaptop\nDHL" | dmenu -i -fn "System San Francisco Display")
+mode=$(echo -e "Bildschirme\nLaptop\nBüro" | dmenu -i -fn "System San Francisco Display")
 
 #Screen mode
 if [ "$mode" = "" ]; then
@@ -12,17 +12,19 @@ elif [ "$mode" = "Bildschirme" ]; then
 		xrandr --output HDMI3 --left-of HDMI2
 		xrandr --output HDMI1 --off
 
+elif [ "$mode" = "Büro" ]; then
+        xrandr --output LVDS1 --auto
+		xrandr --output HDMI1 --auto
+		xrandr --output HDMI1 --left-of LVDS1
+		xrandr --output HDMI2 --off
+		xrandr --output HDMI3 --off
+
 elif [ "$mode" = "Laptop" ]; then
 		xrandr --output HDMI3 --off
 		xrandr --output HDMI2 --off
 		xrandr --output HDMI1 --off
 		xrandr --output LVDS1 --auto
 
-elif [ "$mode" = "DHL" ]; then
-        xrandr --output LVDS1 --auto
-		xrandr --output HDMI2 --off
-		xrandr --output HDMI3 --off
-		xrandr --output HDMI1 --right-of LVDS1
 fi
 
 ~/.fehbg 
