@@ -107,25 +107,44 @@ endfunction
 
 " Autocmd functions
 function SetCppOptions()
-    inoremap \" \""<left>
-    inoremap ' ''<left>
-    
-    inoremap " <c-r>=QuoteDelim('"')<CR>
-    inoremap ' <c-r>=QuoteDelim("'")<CR>
     inoremap <expr> ( ConditionalPairMap('(', ')')
     inoremap <expr> { ConditionalPairMap('{', '}')
     inoremap <expr> [ ConditionalPairMap('[', ']')
+    inoremap <expr> [ ConditionalPairMap('<', '>')
+    inoremap \" \""<left>
+    inoremap ' ''<left>
+    
+    inoremap ) <c-r>=ClosePair(')')<CR>
+    inoremap ] <c-r>=ClosePair(']')<CR>
+    inoremap } <c-r>=CloseBracket()<CR>
+    inoremap " <c-r>=QuoteDelim('"')<CR>
+    inoremap ' <c-r>=QuoteDelim("'")<CR>
 endfunction
 
 function! ConditionalPairMap(open, close)
-  let line = getline('.')
-  let col = col('.')
-  if col < col('$') || stridx(line, a:close, col + 1) != -1
-    return a:open
-  else
-    return a:open . a:close . repeat("\<left>", len(a:close))
-  endif
-endf
+    let line = getline('.')
+    let col = col('.')
+    if col < col('$') || stridx(line, a:close, col + 1) != -1
+        return a:open
+    else
+        return a:open . a:close . repeat("\<left>", len(a:close))
+    endif
+    endf
+    function ClosePair(char)
+        if getline('.')[col('.') - 1] == a:char
+            return "\<Right>"
+        else
+            return a:char
+        endif
+    endf
+    function CloseBracket()
+        if match(getline(line('.') + 1), '\s*}') < 0
+            return "\<CR>}"
+        else
+            return "\<Esc>j0f}a"
+        endif
+    endf
+
     function QuoteDelim(char)
         let line = getline('.')
         let col = col('.')
