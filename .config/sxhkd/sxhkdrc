@@ -21,8 +21,6 @@ XF86Display
     sh /home/lars/scripts/select_monitor
 super + r
     st -e ranger
-super + shift + Delete
-    sudo systemctl stop wpa_supplicant@wlp3s0 && poweroff
 
 XF86Audio{Raise,Lower}Volume
     amixer sset Master 5%{+,-}; refbar
