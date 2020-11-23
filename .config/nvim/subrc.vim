@@ -16,6 +16,7 @@ syntax enable
 
 
 set modeline
+
 set nocompatible
 set <F11>=[23~
 let mapleader="\<F11>"
@@ -50,18 +51,10 @@ set number relativenumber
 set nu rnu
 
 
-" Latexsuit:
-"let g:Tex_FoldedSections += ',frame'
-let g:vimtex_quickfix_latexlog = {'default' : 0}
 
-    let g:vimtex_quickfix_latexlog = {
-              \ 'overfull' : 0,
-              \ 'underfull' : 0,
-              \ 'packages' : {
-              \   'default' : 0,
-              \ },
-              \}
 
+let g:vimtex_compiler_progname = 'pdflatex'
+let g:vimtex_view_general_viewer = 'zathura'
 " FINDING FILES:
 
 set path+=**
@@ -70,9 +63,9 @@ set wildmenu
 " TAG JUMPING:
 set nocp
 filetype plugin on
-command! MTags !ctags -R --c++-kinds=+p --fields=+iaS --extra=+q .<CR><CR>
+command! CppTags !ctags -R --c++-kinds=+p --fields=+iaS --extras=+q .<CR><CR>
 command! MakeTags !ctags -R .
-set tags=~/.vim/stdtags,tags,.tags,../tags
+set tags=~/.config/nvim/stdtags,tags,.tags,../tags
 autocmd InsertLeave * if pumvisible() == 0|pclose|endif
 " SNIPPETS:
 nnoremap ,art :-1read $HOME/.config/nvim/snippets/latex_art.tex<CR>a
@@ -87,50 +80,52 @@ cnoremap w!! execute 'silent! write !sudo tee % >/dev/null' <bar> edit!
 
 "Set <F5> filesspecific
 set <F5>=[15~
-autocmd Filetype rmd map <F5> :w <bar> !echo<space>"require(rmarkdown);<space>render('<c-r>%')"<space>\|<space>R<space>--vanilla <CR><CR>
+autocmd Filetype rmd map <F5> :w <bar> !echo<space>"require(rmarkdown);<space>render('<c-r>%')"<space>\|<space>R<space>--vanilla 
 autocmd Filetype sh  map <F5> :w <bar> !%:p <CR>
 autocmd Filetype py  map <F5> :exec '!python' shellescape(@%, 1) <CR>
 autocmd Filetype tex call SetTexOptions()
 autocmd Filetype cpp call SetCppOptions() 
-autocmd Filetype c call SetCppOptions()
-autocmd Filetype h call SetCppOptions()
+autocmd Filetype c call SetCOptions()
+autocmd Filetype h call SetCOptions()
+
+" Auto comment:
+
+" Clear all comment markers (one rule for all languages)
+map _ :s/^\/\/\\|^--\\|^> \\|^[#"%!;]//<CR>:nohlsearch<CR>
+
+function! SetCOptions()
+    call SetCppOptions()
+  " Insert comments markers
+  map - :s/^/\/\//<CR>:nohlsearch<CR>
+endfunction
+
+
+
+
 "splits open at the bottom and right, which is non-retarded, unlike vim defaults.
   set splitbelow splitright
 
 " Autocmd functions
 function SetCppOptions()
-    map <F5> :YcmCompleter FixIt <CR><CR>
     inoremap \" \""<left>
     inoremap ' ''<left>
-    inoremap ( ()<left>
-    inoremap [ []<++><left><left><left><left><left>
-    "inoremap { {}e:<++><left><left><left><left><left>
-    inoremap { <CR>{<CR>}<ESC>O
-    map <leader><F5> :YcmDiags <CR>
-   " inoremap {;<CR> <CR>{<CR>};<CR><++><up><ESC>O
     
-    inoremap ) <c-r>=ClosePair(')')<CR>
-    inoremap ] <c-r>=ClosePair(']')<CR>
-    inoremap } <c-r>=CloseBracket()<CR>
     inoremap " <c-r>=QuoteDelim('"')<CR>
     inoremap ' <c-r>=QuoteDelim("'")<CR>
-    
+    inoremap <expr> ( ConditionalPairMap('(', ')')
+    inoremap <expr> { ConditionalPairMap('{', '}')
+    inoremap <expr> [ ConditionalPairMap('[', ']')
 endfunction
 
-    function ClosePair(char)
-        if getline('.')[col('.') - 1] == a:char
-            return "\<Right>"
-        else
-            return a:char
-        endif
-    endf
-    function CloseBracket()
-        if match(getline(line('.') + 1), '\s*}') < 0
-            return "\<CR>}"
-        else
-            return "\<Esc>j0f}a"
-        endif
-    endf
+function! ConditionalPairMap(open, close)
+  let line = getline('.')
+  let col = col('.')
+  if col < col('$') || stridx(line, a:close, col + 1) != -1
+    return a:open
+  else
+    return a:open . a:close . repeat("\<left>", len(a:close))
+  endif
+endf
     function QuoteDelim(char)
         let line = getline('.')
         let col = col('.')
@@ -198,7 +193,7 @@ nnoremap <leader> <Esc> :nohlsearch<Bar>:echo<CR>
 " Switch to second file
 nnoremap <Leader><Leader> :e#<CR> 
 
-map <Tab><Tab> <Esc>/<++><CR>ca<
+"map <Tab><Tab> <Esc>/<++><CR>ca<
 " ATP_vim
 let g:atp_Compiler='bash'
 
@@ -211,6 +206,9 @@ nmap <A-x> <Plug>BujoAddnormal
 imap <A-x> <Plug>BujoAddinsert
 nmap <C-x> <Plug>BujoChecknormal
 imap <C-x> <Plug>BujoCheckinsert
+
+" LIST TODOS:
+nmap ,t :vimgrep /\<TODO\>/j **/*.* <BAR> :cope <CR>
 
 " vimling:
 	nm <leader>d :call ToggleDeadKeys()<CR>
