@@ -1,40 +1,14 @@
+"vi:syntax=vim
 
-filetype plugin indent on
+
+
+"SETUP:
 
 set foldenable
-
 set foldmethod=marker
-
-au FileType sh let g:sh_fold_enabled=5
-
-au FileType sh let g:is_bash=1
-
-au FileType sh set foldmethod=syntax
-
-syntax enable
-
-
-
 set modeline
-
-set nocompatible
-set <F11>=[23~
-let mapleader="\<F11>"
-"Basics
-""let g:ycm_confirm_extra_conf = 1
-"let g:ycm_global_ycm_extra_conf = "$HOME/.vim/plugged/YouCompleteMe/.ycm_extra_conf.py"
-let g:tex_flavor='latex'
-nnoremap <SPACE> <Nop>
-set clipboard=
-set bg=light
 set nohlsearch
 set directory^=$XDG_CONFIG_HOME/nvim/tmp//
-
-syntax enable
-
-filetype indent on
-filetype plugin on
-
 set nowrap
 set tabstop=4
 set shiftwidth=4
@@ -44,83 +18,122 @@ set autoindent
 
 set hidden
 set history=200
-set hlsearch
 set showmatch 
 
 set number relativenumber
 set nu rnu
 
 
+set nocompatible "Useless because if user vimrc is loaded it is set automaticaly
+
+set <F11>=[23~
+let mapleader="\<F11>"
 
 
+set bg=light
+syntax enable
+
+filetype indent on
+filetype plugin on
+
+" LATEX SETUP:
+let g:tex_flavor='latex'
 let g:vimtex_compiler_progname = 'pdflatex'
 let g:vimtex_view_general_viewer = 'zathura'
+let g:vimtex_latexmk_options = '-pdf -shell-escape -verbose -file-line-error -synctex=1 -interaction=nonstopmode'
+
+
+
 " FINDING FILES:
 
 set path+=**
 set wildmenu
 
+
 " TAG JUMPING:
-set nocp
-filetype plugin on
 command! CppTags !ctags -R --c++-kinds=+p --fields=+iaS --extras=+q .<CR><CR>
 command! MakeTags !ctags -R .
 set tags=~/.config/nvim/stdtags,tags,.tags,../tags
 autocmd InsertLeave * if pumvisible() == 0|pclose|endif
+
+
 " SNIPPETS:
 nnoremap ,art :-1read $HOME/.config/nvim/snippets/latex_art.tex<CR>a
 nnoremap ,bea :-1read $HOME/.config/nvim/snippets/latex_bea.tex<CR>a
 nnoremap ,ett :-1read $HOME/.config/nvim/snippets/latex_let.tex<CR>a
 nnoremap ,pm a \begin{pmatrix}\end{pmatrix}<ESC>F}a
 nnoremap ,bm a \begin{bmatrix}\end{bmatrix}<ESC>F}a
+
+
 " FORCE SUDO WRITE:
 cnoremap w!! execute 'silent! write !sudo tee % >/dev/null' <bar> edit!
-"autocompletion
-"set wildmode=longest,list,full
 
-"Set <F5> filesspecific
+
+"AUTOCOMPLETION:
+set wildmode=longest,list,full
+
+
+
+"FILE SPECIFIC THINGS:
 set <F5>=[15~
 autocmd Filetype rmd map <F5> :w <bar> !echo<space>"require(rmarkdown);<space>render('<c-r>%')"<space>\|<space>R<space>--vanilla 
-autocmd Filetype sh  map <F5> :w <bar> !%:p <CR>
+autocmd Filetype sh  call SetShOptions()
 autocmd Filetype py  map <F5> :exec '!python' shellescape(@%, 1) <CR>
 autocmd Filetype tex call SetTexOptions()
 autocmd Filetype cpp call SetCppOptions() 
 autocmd Filetype c call SetCOptions()
 autocmd Filetype h call SetCOptions()
 
-" Auto comment:
+"FILE TYPE FUNTIOINS:
 
-" Clear all comment markers (one rule for all languages)
-map _ :s/^\/\/\\|^--\\|^> \\|^[#"%!;]//<CR>:nohlsearch<CR>
-
-function! SetCOptions()
-    call SetCppOptions()
-  " Insert comments markers
-  map - :s/^/\/\//<CR>:nohlsearch<CR>
+function! SetShOptions()
+    map <F5> :w <bar> !%:p <CR>
+    let g:sh_fold_enabled=5
+    let g:is_bash=1
+    set foldmethod=syntax
 endfunction
 
 
+function! SetCOptions()
+    call SetCppOptions()
+endfunction
 
+function SetTexOptions()
+    inoremap ,l <CR>\item<Space>
+endfunction
 
-"splits open at the bottom and right, which is non-retarded, unlike vim defaults.
-  set splitbelow splitright
-
-" Autocmd functions
 function SetCppOptions()
+    "Set brackets like vscode
     inoremap <expr> ( ConditionalPairMap('(', ')')
     inoremap <expr> { ConditionalPairMap('{', '}')
     inoremap <expr> [ ConditionalPairMap('[', ']')
-    inoremap <expr> [ ConditionalPairMap('<', '>')
-    inoremap \" \""<left>
+    inoremap <expr> < ConditionalPairMap('<', '>')
+    inoremap <expr> \" ConditionalPairMap('\"', '\"')
     inoremap ' ''<left>
     
+    "close bracket if no pair is fond on the right side of curser. If found jump over
     inoremap ) <c-r>=ClosePair(')')<CR>
     inoremap ] <c-r>=ClosePair(']')<CR>
     inoremap } <c-r>=CloseBracket()<CR>
     inoremap " <c-r>=QuoteDelim('"')<CR>
     inoremap ' <c-r>=QuoteDelim("'")<CR>
+
+    "open curly brackets if pressed enter between. like vscode
+    inoremap <expr> <CR> getline(".")[col(".")-2:col(".")-1]=="{}" ? "<cr><esc>O" : "<CR>"
+    
+    "use tab to move in autocomplete
+    inoremap <expr> <TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
+    inoremap <expr> <S-TAB> pumvisible() ? "\<C-p>" : "\<TAB>"
+    
+    " Insert comments markers
+    map - :s/^/\/\//<CR>:nohlsearch<CR>
+    
+    " formatting:
+    set formatprg=astyle\ -T4p
 endfunction
 
+
+"BRACKETS PARENTHESIS QUOTATION MARKS:
 function! ConditionalPairMap(open, close)
     let line = getline('.')
     let col = col('.')
@@ -129,60 +142,74 @@ function! ConditionalPairMap(open, close)
     else
         return a:open . a:close . repeat("\<left>", len(a:close))
     endif
-    endf
-    function ClosePair(char)
-        if getline('.')[col('.') - 1] == a:char
-            return "\<Right>"
-        else
-            return a:char
-        endif
-    endf
-    function CloseBracket()
-        if match(getline(line('.') + 1), '\s*}') < 0
-            return "\<CR>}"
-        else
-            return "\<Esc>j0f}a"
-        endif
-    endf
+endf
 
-    function QuoteDelim(char)
-        let line = getline('.')
-        let col = col('.')
-        if line[col - 2] == "\\"
-            "Inserting a quoted quotation mark into the string
-            return a:char
-        elseif line[col - 1] == a:char
-            "Escaping out of the string
-            return "\<Right>"
-         else
-            "Starting a string
-            return a:char.a:char."\<Esc>i"
-        endif
-        endf
-function SetTexOptions()
-    map <F5> :w <bar> !pdflatex %:t <CR><CR>
-    inoremap ,l <CR>\item<Space>
-endfunction
+function ClosePair(char)
+    if getline('.')[col('.') - 1] == a:char
+        return "\<Right>"
+    else
+        return a:char
+    endif
+endf
 
-" Statusbar:
+function CloseBracket()
+    if match(getline(line('.') + 1), '\s*}') < 0
+        return "\<CR>}"
+    else
+        return "\<Esc>j0f}a"
+    endif
+endf
+
+function QuoteDelim(char)
+    let line = getline('.')
+    let col = col('.')
+    if line[col - 2] == "\\"
+        "Inserting a quoted quotation mark into the string
+        return a:char
+    elseif line[col - 1] == a:char
+        "Escaping out of the string
+        return "\<Right>"
+    else
+        "Starting a string
+        return a:char.a:char."\<Esc>i"
+    endif
+endf
+
+
+
+
+" AUTO UNCOMMENT:
+" Clear all comment markers (one rule for all languages)
+map _ :s/^\/\/\\|^--\\|^> \\|^[#"%!;]//<CR>:nohlsearch<CR>
+
+
+
+"OPEN NEW BUFFERS ON THE RIGHT OR BOTTOM:
+  set splitbelow splitright
+
+
+" STATUSBAR:
 hi StatusLine ctermfg=Black ctermbg=White
 set laststatus=0
 
-" Parenthesies:
 
+
+" ENCAPSULATE TEXT:
 :vnoremap _( <Esc>`>a)<Esc>`<i(<Esc>
+
+
 
 " COPY PASTE CLIPBOARD:
 map <C-p> "+p
 map <C-y> "+y
 
-" Disables automatic commenting on newline:
+
+
+" DISABLE AUTOMATIC COMENTING ON NEW LINE:
    autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 
-"Goyo plugin makes text more readable when writing prose:
-"  map <leader>f :Goyo \| set bg=light \| set linebreak<CR>
 
-" Spell-check set to <leader>o, 'o' for 'orthography':
+" SPELLCHECK:
   map <leader>o :setlocal spell! spelllang=de_de<CR>
   map <leader>p :setlocal spell! spelllang=en_us<CR>
   map <leader>ü :setlocal spell! spelllang=fr<CR> 
@@ -195,24 +222,29 @@ map <C-y> "+y
 :nmap <leader><CR> (grammarous-move-to-info-window)
 
 
-" reload .vimrc
+" RELOAD VIMRC:
   map <leader>s :so $MYVIMRC<CR>
 
 
-" Nerd tree
+" NERDTREE:
   map <leader>n :NERDTreeToggle<CR>
   autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
   
-"toggle line numbers 
+
+"TOGGLE LINE NUBMERS:
   map <leader>x :set relativenumber!<CR>
   
-" set highlit to visible
+
+" STOP HIGHLIGTING:
 nnoremap <leader> <Esc> :nohlsearch<Bar>:echo<CR>
 
 " Switch to second file
 nnoremap <Leader><Leader> :e#<CR> 
 
-"map <Tab><Tab> <Esc>/<++><CR>ca<
+
+
+" FIND PLACEHOLDER:
+map <Leader><Tab> <Esc>/<++><CR>ca<
 " ATP_vim
 let g:atp_Compiler='bash'
 
@@ -220,24 +252,13 @@ let g:atp_Compiler='bash'
 autocmd BufWinLeave *.* mkview
 autocmd BufWinEnter *.* silent! loadview
 
-" TODO MANAGER
-nmap <A-x> <Plug>BujoAddnormal
-imap <A-x> <Plug>BujoAddinsert
-nmap <C-x> <Plug>BujoChecknormal
-imap <C-x> <Plug>BujoCheckinsert
-
 " LIST TODOS:
 nmap ,t :vimgrep /\<TODO\>/j **/*.* <BAR> :cope <CR>
 
-" vimling:
-	nm <leader>d :call ToggleDeadKeys()<CR>
-	imap <leader>d <esc>:call ToggleDeadKeys()<CR>a
-	nm <leader>i :call ToggleIPA()<CR>
-	imap <leader>i <esc>:call ToggleIPA()<CR>a
-	nm <leader>q :call ToggleProse()<CR>
 
 " non underlined CurserLineNr
 hi CursorLineNr cterm=none
+
 " spell correction layout
   hi clear spellBad
   hi Spellbad cterm=underline
