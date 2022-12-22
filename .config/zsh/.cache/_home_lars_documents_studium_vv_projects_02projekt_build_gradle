@@ -1,0 +1,8 @@
+gradle_group_tasks=( ${(Q)"${(z)$(<<\EO:gradle_group_tasks
+'init:Initializes a new Gradle build.' 'wrapper:Generates Gradle wrapper files.' 'buildEnvironment:Displays all buildscript dependencies declared in root project '\''02projekt'\''.' 'dependencies:Displays all dependencies declared in root project '\''02projekt'\''.' 'dependencyInsight:Displays the insight into a specific dependency in root project '\''02projekt'\''.' 'help:Displays a help message.' 'javaToolchains:Displays the detected java toolchains.' 'outgoingVariants:Displays the outgoing variants of root project '\''02projekt'\''.' 'projects:Displays the sub-projects of root project '\''02projekt'\''.' 'properties:Displays the properties of root project '\''02projekt'\''.' 'tasks:Displays the tasks runnable from root project '\''02projekt'\''.' 'components:Displays the components produced by root project '\''02projekt'\''. [deprecated]' 'dependentComponents:Displays the dependent components of components in root project '\''02projekt'\''. [deprecated]' 'model:Displays the configuration model of root project '\''02projekt'\''. [deprecated]'
+EO:gradle_group_tasks
+)}"} )
+gradle_all_tasks=( ${(Q)"${(z)$(<<\EO:gradle_all_tasks
+
+EO:gradle_all_tasks
+)}"} )

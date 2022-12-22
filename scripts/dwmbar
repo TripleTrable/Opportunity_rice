@@ -1,0 +1,83 @@
+#!/bin/sh
+
+trap 'update' 5
+
+delim="|"
+counter=0
+
+status(){
+    echo " "
+    amixer get Master | grep -o "[0-9]*%\|\[on\]\|\[off\]" | head -2 |sed "s/\[on\]//;s/\[off\]//"
+
+    # Wifi quality percentage and  icon if ethernet is connected.  
+    if [ "$(grep "^\s*w" /proc/net/wireless)" != "" ] || [ "$(sed "s/down//;s/up/ETH/" /sys/class/net/e*/operstate)" != "" ]; then 
+       # if [ "$(sed "s/down//;s/up/ETH" /sys/class/net/e*/operstate)" != "" ]; then
+            echo "$delim"
+       # fi
+    fi
+    
+    sed "s/down//;s/up/ETH/" /sys/class/net/e*/operstate
+    grep "^\s*w" /proc/net/wireless | awk '{ print "W:", int($3 * 100 / 70) "%" }'
+    # Show unread mail if mutt-wizard is installed.
+#    command -v mw >/dev/null 2>&1 &&
+#        echo "$delim" &&
+#        du -a ~/.local/share/mail/*/INBOX/new/* 2>/dev/null | wc -l | sed 's/^/Mail:/'
+#        echo "$delim"
+    echo "$delim"
+    sensors | grep Package | awk '{print substr($4,2)}'
+    echo "$delim"
+    # Will show all batteries with approximate icon for remaining power.
+   for x in /sys/class/power_supply/BAT?/capacity;
+    do
+    case "$(cat $x)" in
+        100|9[0-9]) echo "" ;;
+        8[0-9]|7[0-9])  echo "" ;;
+        6[0-9]|5[0-9])  echo "" ;;
+        4[0-9]|3[0-9])  echo "" ;;
+        *)      echo "" ;;
+    esac
+    done
+    battery=$(acpi -b | grep -v "unavailable")
+    status=$(echo $battery | awk {'print $3'}| sed 's/.$//')
+    level=$(echo $battery | awk {'print $4'} | sed 's/.$//' | sed 's/%//')
+    fulltext="$level%"
+
+
+
+    if [ "$status" = "Discharging" ]; then
+        fulltext="${fulltext} ($(echo $battery | awk {'print $5'} | grep -Eo "[0-9][0-9]:[0-9][0-9]"))"
+        if [ "$level" -lt "10" ]; then
+            notify-send -u critical "Battery low"
+        fi
+        if [ "$level" -lt "5" ]; then
+            if [[ $counter -eq 5 ]]; then
+                systemctl hibernate  
+            fi
+            counter=$((counter++))
+        fi 
+    elif [ "$status" = "Charging" ]; then
+        fulltext="${fulltext} CHR"
+
+    fi
+    echo "$fulltext"
+    echo "$delim"
+    # Date and time.
+    date '+%d.%m.%Y %H:%M'
+}
+
+update() { 
+    # So all that big status function was just a command that quicking gets
+    # what we want to be the statusbar. This xsetroot command is what sets
+    # it. Note that the tr command replaces newlines with spaces. This is
+    # to prevent some weird issues that cause significant slowing of
+    # everything in dwm. Note entirely sure of the cause, but again, the tr
+    # command easily avoids it.
+    xsetroot -name "$(status | tr '\n' ' ')" &
+    wait
+}
+
+while :; do
+    update
+    sleep 15s &
+    wait
+done

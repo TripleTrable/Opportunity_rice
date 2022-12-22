@@ -1,0 +1,6 @@
+#!/bin/sh
+echo 'Importing invite...'
+calcurse -i "$1"
+
+echo 'Replying to invite...'
+mutt-ical.py -i -e "$2" "$1"

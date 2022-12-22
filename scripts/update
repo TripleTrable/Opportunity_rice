@@ -1,0 +1,46 @@
+#!/bin/bash
+# System Update
+# ---------------------------
+# Snapshot - Rollback - Btrfs
+# ---------------------------
+
+set -e 
+MV=/usr/bin/mv
+BTRFS=/usr/bin/btrfs
+SED=/usr/bin/sed
+PACMAN=/usr/bin/pacman
+PACAUR=/usr/bin/paru
+CP=/usr/bin/cp
+REFLECTOR=/usr/bin/reflector
+
+# ---------------------------
+#      Snapshot System
+# ---------------------------
+
+# -------- OLDSTABLE --------
+
+sudo  $BTRFS subvolume delete /.snapshots/OLDSTABLE
+sudo  $MV -v /.snapshots/STABLE /.snapshots/OLDSTABLE
+sudo  $SED -i 's/STABLE/OLDSTABLE/g' /.snapshots/OLDSTABLE/etc/fstab
+sudo  $CP -v /boot/vmlinuz-linux-stable /boot/vmlinuz-linux-oldstable
+sudo  $CP -v /boot/initramfs-linux-stable.img /boot/initramfs-linux-oldstable.img
+
+# --------- STABLE ----------
+
+sudo  $BTRFS subvolume snapshot / /.snapshots/STABLE
+sudo  $SED -i 's/TESTING/STABLE/g' /.snapshots/STABLE/etc/fstab
+sudo  $CP -v /boot/vmlinuz-linux /boot/vmlinuz-linux-stable
+sudo  $CP -v /boot/initramfs-linux.img /boot/initramfs-linux-stable.img
+# ---------------------------
+#      Update System
+# ---------------------------
+
+sudo  $REFLECTOR --verbose -l 50 --sort rate --save /etc/pacman.d/mirrorlist
+sudo  $PACMAN -Syu
+$PACAUR --noconfirm -Syua
+# ---------------------------
+#    Balance Filesystem
+# --------------------------
+
+sudo  $BTRFS balance start -dusage=5 /btrfs
+

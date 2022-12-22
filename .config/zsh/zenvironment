@@ -1,0 +1,52 @@
+
+export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_DATA_HOME="$HOME/.local/share"
+export XDG_CACHE_HOME="$HOME/.cache"
+export XDG_STATE_HOME="$HOME/.local/state"
+export XDG_DOWNLOAD_DIR="$HOME/downloads"
+
+export PATH="$XDG_DATA_HOME/cargo/bin:${PATH}:/home/lars/scripts:$HOME/.local/bin"
+export SUDO_ASKPASS="/usr/lib/ssh/x11-ssh-askpass"
+export EDITOR="/usr/bin/nvim"
+export TLDR_CACHE_ENABLED=1
+export TLDR_CACHE_MAX_AGE=720
+export KEYTIMEOUT=1
+export TERMINAL="st"
+export BROWSER="firefox"
+export EDITOR="nvim"
+
+
+export XINITRC="$XDG_CONFIG_HOME/xinitrc"
+export LESSHISTFILE="$XDG_STATE_HOME"/less/history
+export ZDOTDIR="$XDG_CONFIG_HOME/zsh"
+export NOTMUCH_CONFIG="$XDG_CONFIG_HOME/notmuch/notmuchrc"
+export NMBGIT="$XDG_DATA_HOME/notmuch/nmbug"
+export WGETRC="$XDG_CONFIG_HOME/wget/wgetrc"
+export DIRSTACKFILE="$ZDOTDIR/zdirs"
+
+export AndroidSdkDirectory="~/Android/Sdk"
+export _JAVA_AWT_WM_NONREPARENTING=1
+
+
+export SSLKEYLOGFILE=~/.cache/.ssl-key.log
+export fpath=($HOME/.config/zsh/completion ${fpath})
+
+export ANDROID_HOME="$XDG_DATA_HOME"/android
+export CALCHISTFILE="$XDG_CACHE_HOME"/calc_history
+export CARGO_HOME="$XDG_DATA_HOME"/cargo
+export CUDA_CACHE_PATH="$XDG_CACHE_HOME"/nv
+export DISTCC_DIR="$XDG_CONFIG_HOME"/distcc
+export DOCKER_CONFIG="$XDG_CONFIG_HOME"/docker
+export GRADLE_USER_HOME="$XDG_DATA_HOME"/gradle
+export GTK2_RC_FILES="$XDG_CONFIG_HOME"/gtk-2.0/gtkrc
+export XAUTHORITY="$XDG_RUNTIME_DIR"/Xauthority
+export TEXMFVAR="$XDG_CACHE_HOME"/texlive/texmf-var
+export RUSTUP_HOME="$XDG_DATA_HOME"/rustup
+export PYTHONSTARTUP="${XDG_CONFIG_HOME}/python/pythonrc"
+export PSQL_HISTORY="$XDG_DATA_HOME/psql_history"
+export PLATFORMIO_CORE_DIR="$XDG_DATA_HOME"/platformio
+export PASSWORD_STORE_DIR="$XDG_DATA_HOME"/pass
+export NUGET_PACKAGES="$XDG_CACHE_HOME"/NuGetPackages
+export MYSQL_HISTFILE="$XDG_DATA_HOME"/mysql_history
+
+export PAGER="less -R"

@@ -1,0 +1,16 @@
+#!/usr/bin/env sh
+
+[ -f ~/.xprofile ] && . ~/.xprofile
+#exec i3
+xrdb -load "$XDG_CONFIG_HOME/X11/xresources"
+exec startdwm
+
+
+#feh --bg-scale /home/lars/pictures/Wallpaper/Wallpaper.jpg&
+#compton &
+
+#dunst&
+#setxkbmap -layout de&
+#sxhkd &
+#unclutter 
+#exec startdwm

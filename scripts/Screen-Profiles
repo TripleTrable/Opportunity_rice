@@ -1,0 +1,27 @@
+#!/bin/bash
+
+if [ -z "${1}" ]; then
+    mode=$(echo -e "Dockingstation\nLaptop" | dmenu -i -fn "System San Francisco Display")
+else
+    mode="${1}"
+fi
+
+#Screen mode
+if [ "$mode" = "" ]; then
+		exit 1
+elif [ "$mode" = "Dockingstation" ]; then
+        xrandr --output eDP1 --off
+		xrandr --output DP1-1 --mode 1920x1080
+		xrandr --output DP1-3 --mode 1920x1080
+		xrandr --output DP1-1 --left-of DP1-3
+
+
+elif [ "$mode" = "Laptop" ]; then
+		xrandr --output DP1-1 --off
+		xrandr --output DP1-3 --off
+		xrandr --output eDP1 --auto
+else
+		xrandr --auto
+fi
+
+~/.fehbg

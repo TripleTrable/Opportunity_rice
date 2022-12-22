@@ -1,0 +1,16 @@
+#!/bin/sh
+~/.fehbg
+#compton &
+xcompmgr&
+
+dwmbar&
+
+dunst &
+setxkbmap -layout de -option caps:swapescape
+sxhkd &
+unclutter &
+
+while pgrep -x mpd; do
+    mpc idle >/dev/null 2>&1
+    refbar
+done &

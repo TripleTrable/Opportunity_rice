@@ -1,0 +1,30 @@
+#vi:syntax=zsh
+
+alias sudo='sudo '
+alias t="telegram-cli -N"
+alias dotfiles='git --git-dir=$HOME/.dotfiles --work-tree=$HOME'
+alias cf='cd ~/.config/'
+alias wifi='sudo systemctl start NetworkManager'
+alias v='nvim'
+alias dwmclean='make clean && rm -f config.h && git reset --hard suckless/master'
+alias mountbackups='sudo mount -t nfs -o soft 192.168.2.110:/media /mnt'
+alias surfclean='make clean && rm -f config.h && git reset --hard origin/surf-webkit2'
+alias slockclean='make clean && rm -f config.h && git reset --hard origin/master'
+alias dnb='dotnet build'
+alias dnr='dotnet run'
+alias hibernate="sudo systemctl hibernate"
+alias telegram="telegram-cli -N"
+alias vzr="v ~/.config/zsh/.zshrc"
+alias code="code-insiders"
+alias vm="virt-manager -c 'qemu+ssh://lars@pioneer:22/system?keyfile=.ssh/id_rsa'"
+alias z='zathura'
+alias c='calcurse'
+alias sc='sc-im'
+alias mbsync='mbsync -c "$XDG_CONFIG_HOME"/isync/mbsyncrc'
+alias wget='wget --hsts-file="$XDG_CONFIG_HOME/wget/wget-hsts"'
+alias sdkmanager='~/Android/Sdk/tools/bin/sdkmanager'
+alias avdmanager='~/Android/Sdk/tools/bin/avdmanager'
+alias adb='~/Android/Sdk/platform-tools/adb'
+alias android-emulator='~/Android/Sdk/emulator/emulator'
+alias cups='sudo systemctl start cups-browsed.service'
+alias sa='eval "$(ssh-agent -s)" && ssh-add ~/.ssh/id_ed25519'

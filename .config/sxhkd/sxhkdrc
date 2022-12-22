@@ -1,0 +1,43 @@
+# Basic binds
+super + Return
+    st
+super + d
+    dmenur -F -fn "SF Mono"
+super + shift + w
+    networkmanager_dmenu
+super + shift + d
+    exec sudo -A /home/lars/scripts/dmenumount
+super + shift + u
+    exec sudo -A /home/lars/scripts/dmenuumount
+super + p
+    passmenu
+super + shift + m
+    st neomutt
+super + control + Delete
+    st htop
+super + F1
+    slock
+XF86TouchpadToggle
+    Select-monitor
+XF86Display
+    sh /home/lars/scripts/select_monitor
+super + r
+    st -e ranger
+
+XF86Audio{Raise,Lower}Volume
+    amixer sset Master 5%{+,-}; refbar
+
+XF86MonBrightness{UpDown}
+    ;
+
+XF86AudioMute
+    amixer set Master toggle && refbar
+
+XF86AudioMicMute
+    amixer set Capture toggle && refbar
+
+XF86AudioPlay
+    mpc toggle
+
+XF86Audio{Next,Prev}
+    mpc {next,prev}
