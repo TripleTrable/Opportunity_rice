@@ -4,7 +4,7 @@
 # Snapshot - Rollback - Btrfs
 # ---------------------------
 
-set -e 
+set -e
 MV=/usr/bin/mv
 BTRFS=/usr/bin/btrfs
 SED=/usr/bin/sed
@@ -35,7 +35,7 @@ sudo  $CP -v /boot/initramfs-linux.img /boot/initramfs-linux-stable.img
 #      Update System
 # ---------------------------
 
-sudo  $REFLECTOR --verbose -l 50 --sort rate --save /etc/pacman.d/mirrorlist
+sudo  $REFLECTOR --verbose -l 10 --sort rate --save /etc/pacman.d/mirrorlist
 sudo  $PACMAN -Syu
 $PACAUR --noconfirm -Syua
 # ---------------------------
