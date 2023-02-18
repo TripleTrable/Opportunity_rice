@@ -59,4 +59,6 @@ return require('packer').startup(function(use)
       "windwp/nvim-autopairs",
   }
 
+  use { "lervag/vimtex" }
+
 end)
