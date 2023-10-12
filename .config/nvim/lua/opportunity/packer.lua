@@ -61,4 +61,11 @@ return require('packer').startup(function(use)
 
   use { "lervag/vimtex" }
 
+  use { "liuchengxu/graphviz.vim" }
+
+  use { "mfussenegger/nvim-lint" }
+  use { "rshkarin/mason-nvim-lint"}
+
+  use { "barreiroleo/ltex-extra.nvim"}
+
 end)
